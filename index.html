@@ -1,0 +1,52 @@
+<div id="app">
+  <!--atualizei h2 para ul e criei um novo item pra cada array
+  usando a diretiva v-for.-->
+  <h1>PRODUCTS</h1>
+  
+  <ul>
+    <li v-for="product in products">
+      <input type="number" v-model.number="product.quantity">
+      {{ product.name }}
+      <!--utilizando diretiva v-model em input-->
+      
+      <span v-if="product.quantity === 0">
+        <!--diretiva v-if serve pra verificar-->
+        - OUT STOCK
+      </span>
+      <!--adicionando interatividade-->
+      <button @click="product.quantity += 1">
+        Add
+      </button>
+    </li>
+  </ul>
+  <h2>Total  Inventory: {{ totalProducts}}</h2>
+</div>
+<!--incluindo a biblioteca vue-->
+<script src="http://unpkg.com/vue"></script>
+<script>
+  // criando instância e plugando elemento raiz com o ID app(el significa elemento)
+  const app = new Vue({
+    el: '#app',
+    // movendo dados para um objeto
+    data: {
+      products: []  
+    },
+    // mostrando o total de produtos
+    computed: {
+      totalProducts () {
+        return this.products.reduce((sum, product) => {
+          return sum + product.quantity
+        }, 0)
+      }
+    },
+    // obter produtos de uma API
+    created () {
+        fetch('http://api.myjson.com/bins/74l63')
+        .then(response => response.json())
+        .then(json => {
+          this.products = json.products
+        })
+      }
+  })
+    // var products = 'Boots'
+</script>
